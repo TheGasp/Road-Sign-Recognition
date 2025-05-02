@@ -1,0 +1,6 @@
+path: /home/gasp/Work_Warsaw/Projet_IAF/data/btsd
+train: images/train
+val: images/val
+
+nc: 62
+names: ['Speed_limit_20', 'Speed_limit_30', 'Speed_limit_50', 'Speed_limit_60', 'Speed_limit_70', 'Speed_limit_80', 'End_of_speed_limit_80', 'Speed_limit_100', 'Speed_limit_120', 'No_overtaking', 'No_overtaking_trucks', 'Priority_next_intersection', 'Priority_road', 'Give_way', 'Stop', 'No_traffic_both_directions', 'No_trucks', 'No_entry', 'General_warning', 'Curve_left', 'Curve_right', 'Double_curve', 'Uneven_road', 'Slippery_road', 'Road_narrows', 'Construction', 'Traffic_signal', 'Pedestrian_crossing', 'Children_crossing', 'Bicycles_crossing', 'Snow', 'Animals', 'End_all_restrictions', 'Turn_right_ahead', 'Turn_left_ahead', 'Ahead_only', 'Ahead_or_right', 'Ahead_or_left', 'Keep_right', 'Keep_left', 'Roundabout_mandatory', 'End_no_overtaking', 'End_no_overtaking_trucks', 'Go_straight_or_turn_left', 'Go_straight_or_turn_right', 'No_parking', 'No_stopping', 'Dangerous_left_curve', 'Dangerous_right_curve', 'Tunnel', 'Traffic_calming', 'Tram_crossing', 'Low_flying_aircraft', 'Falling_rocks', 'Quayside_or_river_bank', 'Bump', 'Dangerous_crosswinds', 'Two_way_traffic', 'Level_crossing_with_barrier', 'Level_crossing_without_barrier', 'School_zone', 'Other']

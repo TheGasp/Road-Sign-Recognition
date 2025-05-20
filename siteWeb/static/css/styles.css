@@ -1,0 +1,489 @@
+/* Style global du body */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Uniformise les calculs de largeur */
+    padding-top: 70px; /* Compense la hauteur de la bannière fixe */
+}
+
+/* Appliquer box-sizing à tous les éléments */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* Style du bandeau de navigation */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Logo à gauche, boutons à droite */
+    background-color: #2a2f43; /* Bleu foncé */
+    color: white;
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed; /* Fixe la bannière au sommet */
+    top: 0; /* Position verticale à 0 */
+    left: 0; /* Étend à gauche */
+    right: 0; /* Étend à droite */
+    z-index: 1000; /* Assure qu'elle reste au-dessus des autres éléments */
+}
+
+/* Logo à gauche */
+.navbar .logo img {
+    height: 50px; /* Ajustez si nécessaire */
+    width: auto;
+}
+
+/* Conteneur des boutons à droite */
+.nav-buttons {
+    display: flex;
+    gap: 15px; /* Espacement entre les boutons */
+}
+
+/* Boutons de navigation */
+.nav-btn {
+    text-decoration: none; /* Supprime le soulignement */
+    padding: 10px 20px;
+    background-color: white; /* Fond blanc */
+    color: rgb(0, 208, 130); /* Vert clair */
+    font-weight: bold;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s; /* Transition douce */
+    display: flex; /* Flex pour centrer verticalement */
+    align-items: center; /* Centre verticalement */
+    justify-content: center; /* Centre horizontalement */
+}
+
+/* Effet au survol */
+.nav-btn:hover {
+    background-color: rgb(0, 208, 130); /* Vert clair */
+    color: white;
+    cursor: pointer;
+}
+
+/* Style pour le bouton actif */
+.nav-btn.active {
+    background-color: rgb(0, 208, 130); /* Même style que le hover */
+    color: white;
+}
+
+/* Bouton Paramètres spécifique */
+.settings-btn {
+    padding: 5px; /* Moins de padding pour l'icône */
+    background-color: white; /* Même couleur de fond que les autres boutons */
+    border-radius: 50%; /* Cercle autour de l'icône */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+}
+
+/* Icône d'engrenage */
+.settings-btn .icon {
+    pointer-events: none; /* Désactive les interactions de la souris */
+    user-select: none; /* Empêche la sélection de texte */
+    width: 20px; /* Taille de l'icône */
+    height: 20px;
+}
+
+/* Effet au survol */
+.settings-btn:hover {
+    background-color: rgb(0, 208, 130); /* Vert clair */
+    cursor: pointer;
+}
+
+/* Titre principal */
+.main-title {
+    font-size: 48px; /* Taille plus grande pour le titre */
+    color: rgb(0, 208, 130); /* Vert défini */
+    font-weight: bold;
+}
+
+/* Centrer le contenu principal */
+.centered-content {
+    text-align: center;
+    margin-top: 50px; /* Espacement du haut */
+}
+
+/* Conteneur pour la zone de saisie et le bouton */
+.input-container {
+    display: flex; /* Alignement horizontal */
+    align-items: center;
+    justify-content: center;
+    width: 60%; /* Correspond à la largeur de la zone grisée */
+    max-width: 800px; /* Limite la largeur maximale */
+    margin: 0 auto; /* Centre le conteneur */
+    gap: 10px; /* Espacement entre la saisie et le bouton */
+    box-sizing: border-box; /* Assure une largeur identique avec padding */
+}
+
+/* Champ de saisie */
+#query-input {
+    flex: 1; /* Prend tout l'espace restant */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px; /* Coins arrondis */
+    outline: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Bouton avec une icône */
+.icon-btn {
+    background-color: rgb(0, 208, 130); /* Vert clair */
+    border: none;
+    width: 45px; /* Taille fixe pour un cercle parfait */
+    height: 45px; /* Taille fixe pour un cercle parfait */
+    border-radius: 50%; /* Bouton rond */
+    display: flex; /* Flexbox pour alignement */
+    align-items: center; /* Centre verticalement l'icône */
+    justify-content: center; /* Centre horizontalement l'icône */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Légère ombre */
+}
+
+/* Icône d'avion en papier */
+.icon-plane {
+    pointer-events: none; /* Désactive les interactions de la souris */
+    user-select: none; /* Empêche la sélection de texte */
+    width: 20px; /* Taille de l'icône */
+    height: 20px;
+    display: block; /* Assure que l'icône est traité comme un élément bloc */
+}
+
+/* Effet hover pour le bouton */
+.icon-btn:hover {
+    background-color: #1a865d;
+    transform: scale(1.1);
+}
+
+/* Conteneur pour afficher les réponses */
+.response-container {
+    display: none; /* Cache initialement la zone grise */
+    flex-direction: column;
+    gap: 10px; /* Espacement entre les messages */
+    background-color: #f8f9fa; /* Gris plus clair */
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    padding: 15px;
+    width: 60%;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Style commun pour toutes les bulles */
+.message {
+    max-width: 70%; /* Largeur maximale des bulles */
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 16px;
+    line-height: 1.5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    word-wrap: break-word; /* Coupe les mots longs */
+}
+
+/* Bulles utilisateur (alignées à droite) */
+.message.user {
+    align-self: flex-end; /* Aligne à droite */
+    background-color: #d1e7dd; /* Vert clair */
+    color: #155724; /* Texte vert foncé */
+}
+
+/* Bulles AI (alignées à gauche) */
+.message.ai {
+    align-self: flex-start; /* Aligne à gauche */
+    background-color: #e9ecef; /* Gris clair */
+    color: #495057; /* Texte gris foncé */
+}
+
+.fixed-input-container {
+    position: fixed;
+    top: 70px; /* Ajustez la hauteur si nécessaire */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    background-color: transparent;
+    width: 60%;
+    max-width: 800px;
+    margin: 0;
+    margin-top: 10px; /* Ajoute un espace de 10px entre la barre bleue et la zone */
+    box-shadow: none;
+}
+
+.detached-input-container {
+    position: static; /* Revenir à la position normale */
+    top: auto; /* Supprime tout positionnement vertical */
+    transform: none; /* Supprime les transformations */
+}
+
+.spinning-icon {
+    pointer-events: none; /* Désactive les interactions de la souris */
+    user-select: none; /* Empêche la sélection de texte */
+    animation: spin 1s linear infinite;
+    width: 20px;
+    height: 20px;
+    display: block;
+    margin: auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.upload-area {
+    width: 500px;
+    height: 200px;
+    background-color: #f8f9fa;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.upload-area:hover,
+.upload-area.dragover {
+    background-color: #e9ecef;
+}
+
+.upload-icon {
+    pointer-events: none; /* Désactive les interactions de la souris */
+    user-select: none; /* Empêche la sélection de texte */
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.upload-area p {
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+}
+
+.upload-button:hover {
+    background-color: #1a865d;
+}
+
+.upload-button {
+    display: block;
+    width: 500px;
+    margin: 20px auto;
+    padding: 10px;
+    background-color: rgb(0, 208, 130);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload-button:disabled {
+    cursor: default;
+    background-color: transparent;
+}
+
+
+.large-spinner {
+    width: 40px; /* Increase size for better visibility */
+    height: 40px;
+}
+
+.notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #d1e7dd;
+    color: #155724;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.3s;
+}
+
+.notification.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.notification.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.notification.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/*Section lié aux paramètres */
+.settings-container {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espacement entre les rubriques */
+}
+
+.settings-section {
+    background-color: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.settings-section h2 {
+    color: rgb(0, 208, 130); /* Même vert que le titre principal */
+    margin-bottom: 10px;
+}
+
+#temperature-slider,
+#top-p-slider,
+#top-k-slider {
+    width: 80%; /* Ajustez cette valeur selon vos besoins */
+    max-width: 600px; /* Limitez la largeur maximale */
+    margin: 10px 0;
+}
+
+.slider-row {
+    display: flex; /* Dispose les éléments sur une ligne */
+    align-items: center; /* Aligne verticalement au centre */
+    justify-content: flex-start; /* Aligne tous les éléments à gauche */
+    gap: 10px; /* Espacement entre les éléments */
+    margin: 10px 0; /* Espacement vertical entre les lignes */
+}
+
+.slider-label {
+    flex: 0 0 120px; /* Largeur fixe pour le label (ajustable) */
+    text-align: left; /* Aligne le texte à gauche */
+    margin-right: 10px; /* Espacement entre le texte et le slider */
+}
+
+input[type="range"] {
+    flex: 1; /* Prend tout l’espace restant */
+    max-width: 300px; /* Limite la largeur maximale (ajustable) */
+}
+
+.slider-value {
+    flex: 0 0 50px; /* Largeur fixe pour les valeurs numériques */
+    text-align: left; /* Aligne les chiffres à gauche */
+}
+
+
+#documents-list {
+    list-style-type: none; /* Supprime les puces */
+    padding: 0;
+    margin: 10px 0;
+    max-height: 200px; /* Limite la hauteur de la liste */
+    overflow-y: auto; /* Ajoute un défilement si la liste est trop longue */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    padding: 10px;
+}
+
+#documents-list li {
+    padding: 5px 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#documents-list li:last-child {
+    border-bottom: none; /* Supprime la bordure pour le dernier élément */
+}
+
+
+.database-info {
+    display: flex;
+    justify-content: space-between; /* Espace entre le texte et le bouton */
+    align-items: center; /* Aligne verticalement les éléments */
+    margin-bottom: 20px; /* Espace sous le conteneur */
+    font-size: 18px; /* Taille du texte */
+    font-weight: bold; /* Texte en gras */
+}
+
+#clear-database {
+    padding: 10px 20px;
+    background-color: white;
+    color: red;
+    border: 2px solid red;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease; /* Animation de transition */
+}
+
+#clear-database:hover {
+    background-color: red;
+    color: white;
+}
+
+#document-count {
+    font-weight: normal; /* Texte non gras */
+    font-size: 16px; /* Ajustez la taille selon vos besoins */
+    color: #333; /* Couleur du texte */
+}
+
+
+.settings-header {
+    display: flex;
+    align-items: center; /* Aligne verticalement les éléments */
+    justify-content: space-between; /* Espace entre le titre et le bouton */
+    margin-bottom: 10px; /* Ajoute un espacement en bas */
+}
+
+.settings-header h2 {
+    margin: 0; /* Supprime les marges du titre pour un alignement précis */
+    color: rgb(0, 208, 130); /* Même couleur que les autres titres */
+}
+
+#delete-config-button {
+    padding: 10px 20px;
+    background-color: white;
+    color: red;
+    border: 2px solid red;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease; /* Animation de transition */
+}
+
+#delete-config-button:hover {
+    background-color: red;
+    color: white;
+}
+

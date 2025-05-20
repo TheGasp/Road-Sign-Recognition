@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Flask App{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <!-- Bandeau de navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <img src="/static/images/logo-ias.png" alt="Logo" draggable="false" />
+        </div>
+        <div class="logo">
+            <img src="/static/images/Logo politechnika.png" alt="Logo" draggable="false" />
+        </div>
+        <div class="nav-buttons">
+            <a href="/recognize" class="nav-btn {% if request.path == '/recognize' %}active{% endif %}">Recognize</a>
+        </div>
+    </nav>
+
+    <!-- Contenu principal -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

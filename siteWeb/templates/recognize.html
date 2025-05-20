@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Traffic Sign Recognition{% endblock %}
+
+{% block content %}
+<div class="centered-content">
+    <h1 class="main-title">Traffic Sign Recognition</h1>
+    <form id="detect-form" method="post" enctype="multipart/form-data">
+        <div class="upload-area" id="upload-area">
+            <img src="/static/images/file-icon.png" alt="Upload Icon" class="upload-icon">
+            <p id="upload-text">Click or drop an image here</p>
+            <input type="file" id="image-input" name="file" accept="image/*" hidden />
+        </div>
+        <button type="submit" id="detect-button" class="upload-button">Analyze</button>
+    </form>
+
+    <p id="prediction-result" style="text-align: center; font-size: 20px; font-weight: bold;"></p>
+    <div id="image-preview" style="text-align: center; margin-top: 20px;"></div>
+    <div id="notification" class="notification hidden"></div>
+</div>
+
+<script>
+    const uploadArea = document.getElementById("upload-area");
+    const imageInput = document.getElementById("image-input");
+    const detectForm = document.getElementById("detect-form");
+    const uploadText = document.getElementById("upload-text");
+    const detectButton = document.getElementById("detect-button");
+    const resultDisplay = document.getElementById("prediction-result");
+    const imagePreview = document.getElementById("image-preview");
+    const notification = document.getElementById("notification");
+
+    uploadArea.addEventListener("click", () => imageInput.click());
+
+    uploadArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadArea.classList.add("dragover");
+    });
+
+    uploadArea.addEventListener("dragleave", () => {
+        uploadArea.classList.remove("dragover");
+    });
+
+    uploadArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove("dragover");
+        const files = e.dataTransfer.files;
+        if (files.length) {
+            imageInput.files = files;
+            uploadText.textContent = `Selected image: ${files[0].name}`;
+        }
+    });
+
+    imageInput.addEventListener("change", () => {
+        if (imageInput.files.length) {
+            uploadText.textContent = `Selected image: ${imageInput.files[0].name}`;
+        }
+    });
+
+    detectForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        if (!imageInput.files.length) {
+            showNotification("Please select an image before analyzing.", "error");
+            return;
+        }
+
+        detectButton.innerHTML = `<img src="/static/images/chargement-icon.png" alt="Loading..." class="spinning-icon large-spinner" />`;
+        detectButton.disabled = true;
+        resultDisplay.textContent = "";
+        imagePreview.innerHTML = "";
+
+        const formData = new FormData();
+        formData.append("file", imageInput.files[0]);
+
+        try {
+            const response = await fetch("/detect", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+            if (response.ok && result.class) {
+                resultDisplay.textContent = `Detected sign: ${result.class} (${(result.confidence * 100).toFixed(1)}%)`;
+                if (result.image_url) {
+                    const img = document.createElement("img");
+                    img.src = result.image_url;
+                    img.alt = "Annotated Result";
+                    img.style.maxWidth = "80%";
+                    img.style.border = "2px solid #ccc";
+                    img.style.borderRadius = "10px";
+                    imagePreview.appendChild(img);
+                }
+            } else {
+                resultDisplay.textContent = `Error: ${result.error || "Invalid response."}`;
+            }
+        } catch (err) {
+            console.error(err);
+            showNotification("Network or server error. Please try again later.", "error");
+        } finally {
+            detectButton.innerHTML = "Analyze";
+            detectButton.disabled = false;
+            imageInput.value = "";
+            uploadText.textContent = "Click or drop an image here";
+        }
+    });
+
+    function showNotification(message, type) {
+        notification.textContent = message;
+        notification.className = `notification ${type}`;
+        notification.classList.remove("hidden");
+
+        setTimeout(() => {
+            notification.classList.add("hidden");
+        }, 6000);
+    }
+</script>
+{% endblock %}

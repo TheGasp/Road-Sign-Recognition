@@ -16,7 +16,7 @@ body {
 .navbar {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Logo à gauche, boutons à droite */
+    justify-content: flex-end; /* Logo à gauche, boutons à droite */
     background-color: #2a2f43; /* Bleu foncé */
     color: white;
     padding: 10px 20px;

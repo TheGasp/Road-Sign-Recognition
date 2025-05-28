@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Traffic Sign Detection{% endblock %}
+
+{% block content %}
+<div class="centered-content">
+    <h1 class="main-title">Traffic Sign Detection System</h1>
+    <p style="font-size: 18px; color: #666; margin-bottom: 40px;">AI-Powered Traffic Sign Recognition using YOLOv5</p>
+    
+    <!-- Quick Start Card (using your existing styles) -->
+    <div class="settings-section" style="max-width: 800px; margin: 20px auto;">
+        <h2>🚀 Quick Start</h2>
+        <p>Upload an image to instantly detect and classify traffic signs with high accuracy.</p>
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/recognize" class="upload-button" style="width: auto; display: inline-block;">Start Detection Now</a>
+        </div>
+    </div>
+    
+    <!-- System Status Card -->
+    <div class="settings-section" style="max-width: 800px; margin: 20px auto;">
+        <h2>📊 System Status</h2>
+        <div id="system-status">
+            <div class="spinning-icon large-spinner"></div>
+            <p>Checking system status...</p>
+        </div>
+    </div>
+    
+    <!-- Current Configuration Card -->
+    <div class="settings-section" style="max-width: 800px; margin: 20px auto;">
+        <h2>📈 Current Configuration</h2>
+        <div id="quick-stats">
+            <div class="spinning-icon"></div>
+            <p>Loading current settings...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadSystemStatus();
+    loadQuickStats();
+});
+
+async function loadSystemStatus() {
+    const statusDiv = document.getElementById('system-status');
+    
+    try {
+        const response = await fetch('/model-info');
+        const data = await response.json();
+        
+        if (data.success) {
+            statusDiv.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <div class="slider-row">
+                        <div class="slider-label"><strong>Status:</strong></div>
+                        <div class="slider-value"><span style="color: green;">●</span> Ready</div>
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><strong>Model Classes:</strong></div>
+                        <div class="slider-value">${data.model_classes}</div>
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><strong>Device:</strong></div>
+                        <div class="slider-value">${data.device}</div>
+                    </div>
+                    <div class="slider-row">
+                        <div class="slider-label"><strong>Supported Signs:</strong></div>
+                        <div class="slider-value">${data.class_names ? data.class_names.length : 'N/A'}</div>
+                    </div>
+                </div>
+            `;
+        } else {
+            statusDiv.innerHTML = `
+                <div style="text-align: center;">
+                    <div class="slider-row">
+                        <div class="slider-label"><strong>Status:</strong></div>
+                        <div class="slider-value" style="color: red;">● Error</div>
+                    </div>
+                    <p style="color: #dc3545;">${data.error}</p>
+                    <button onclick="loadSystemStatus()" class="upload-button" style="width: auto;">Retry</button>
+                </div>
+            `;
+        }
+    } catch (error) {
+        statusDiv.innerHTML = `
+            <div style="text-align: center;">
+                <div class="slider-row">
+                    <div class="slider-label"><strong>Status:</strong></div>
+                    <div class="slider-value" style="color: red;">● Connection Error</div>
+                </div>
+                <button onclick="loadSystemStatus()" class="upload-button" style="width: auto;">Retry</button>
+            </div>
+        `;
+    }
+}
+
+async function loadQuickStats() {
+    const statsDiv = document.getElementById('quick-stats');
+    
+    try {
+        const response = await fetch('/get-config');
+        const config = await response.json();
+        
+        statsDiv.innerHTML = `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div class="slider-row">
+                    <div class="slider-label">Confidence:</div>
+                    <div class="slider-value" style="color: rgb(0, 208, 130); font-weight: bold;">${(config.confidence_threshold * 100).toFixed(0)}%</div>
+                </div>
+                <div class="slider-row">
+                    <div class="slider-label">Image Size:</div>
+                    <div class="slider-value" style="color: rgb(0, 208, 130); font-weight: bold;">${config.image_size}px</div>
+                </div>
+                <div class="slider-row">
+                    <div class="slider-label">Max Detections:</div>
+                    <div class="slider-value" style="color: rgb(0, 208, 130); font-weight: bold;">${config.max_detections}</div>
+                </div>
+                <div class="slider-row">
+                    <div class="slider-label">IoU Threshold:</div>
+                    <div class="slider-value" style="color: rgb(0, 208, 130); font-weight: bold;">${(config.iou_threshold * 100).toFixed(0)}%</div>
+                </div>
+            </div>
+        `;
+    } catch (error) {
+        statsDiv.innerHTML = `
+            <div style="text-align: center;">
+                <p style="color: #dc3545;">Unable to load configuration</p>
+                <button onclick="loadQuickStats()" class="upload-button" style="width: auto;">Retry</button>
+            </div>
+        `;
+    }
+}
+</script>
+{% endblock %}

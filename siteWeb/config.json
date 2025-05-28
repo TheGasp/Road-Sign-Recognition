@@ -1,0 +1,8 @@
+{
+    "confidence_threshold": 0.25,
+    "iou_threshold": 0.45,
+    "image_size": 640,
+    "model_path": "../best.pt",
+    "max_detections": 10,
+    "save_annotated_images": true
+}

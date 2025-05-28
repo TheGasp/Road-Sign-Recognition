@@ -64,6 +64,13 @@
             return;
         }
 
+        // Check file size (10MB limit)
+        const file = imageInput.files[0];
+        if (file.size > 10 * 1024 * 1024) {
+        showNotification("File too large. Maximum size is 10MB.", "error");
+        return;
+        }
+
         detectButton.innerHTML = `<img src="/static/images/chargement-icon.png" alt="Loading..." class="spinning-icon large-spinner" />`;
         detectButton.disabled = true;
         resultDisplay.textContent = "";
@@ -73,35 +80,59 @@
         formData.append("file", imageInput.files[0]);
 
         try {
-            const response = await fetch("/detect", {
-                method: "POST",
-                body: formData
-            });
+        const startTime = Date.now();
+        const response = await fetch("/detect", {
+            method: "POST",
+            body: formData
+        });
 
-            const result = await response.json();
-            if (response.ok && result.class) {
-                resultDisplay.textContent = `Detected sign: ${result.class} (${(result.confidence * 100).toFixed(1)}%)`;
-                if (result.image_url) {
-                    const img = document.createElement("img");
-                    img.src = result.image_url;
-                    img.alt = "Annotated Result";
-                    img.style.maxWidth = "80%";
-                    img.style.border = "2px solid #ccc";
-                    img.style.borderRadius = "10px";
-                    imagePreview.appendChild(img);
-                }
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+            const processingTime = Date.now() - startTime;
+            
+            // Enhanced result display with new API format
+            if (result.total_detections > 0) {
+                resultDisplay.innerHTML = `
+                    <div style="margin-bottom: 10px;">
+                        <strong>Detected sign: ${result.class} (${(result.confidence * 100).toFixed(1)}%)</strong>
+                    </div>
+                    <div style="font-size: 14px; color: #666;">
+                        Found ${result.total_detections} sign${result.total_detections !== 1 ? 's' : ''} • 
+                        Processing: ${(result.processing_time * 1000).toFixed(0)}ms • 
+                        Total: ${(processingTime / 1000).toFixed(1)}s
+                    </div>
+                `;
             } else {
-                resultDisplay.textContent = `Error: ${result.error || "Invalid response."}`;
+                resultDisplay.innerHTML = `
+                    <div>No traffic signs detected</div>
+                    <div style="font-size: 14px; color: #666;">
+                        Processing time: ${(result.processing_time * 1000).toFixed(0)}ms
+                    </div>
+                `;
             }
-        } catch (err) {
-            console.error(err);
-            showNotification("Network or server error. Please try again later.", "error");
-        } finally {
-            detectButton.innerHTML = "Analyze";
-            detectButton.disabled = false;
-            imageInput.value = "";
-            uploadText.textContent = "Click or drop an image here";
+            
+            if (result.image_url) {
+                const img = document.createElement("img");
+                img.src = result.image_url;
+                img.alt = "Annotated Result";
+                img.style.maxWidth = "80%";
+                img.style.border = "2px solid #ccc";
+                img.style.borderRadius = "10px";
+                imagePreview.appendChild(img);
+            }
+        } else {
+            resultDisplay.innerHTML = `<div style="color: red;">Error: ${result.error || "Detection failed"}</div>`;
         }
+    } catch (err) {
+        console.error(err);
+        showNotification("Network or server error. Please try again later.", "error");
+    } finally {
+        detectButton.innerHTML = "Analyze";
+        detectButton.disabled = false;
+        imageInput.value = "";
+        uploadText.textContent = "Click or drop an image here";
+    }
     });
 
     function showNotification(message, type) {

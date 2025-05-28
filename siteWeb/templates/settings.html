@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="centered-content">
+    <h1 class="main-title">Settings</h1>
+</div>
+<div class="settings-container">
+    <div class="settings-section">
+        <div class="settings-header">
+            <h2>Detection Parameters</h2>
+            <button id="delete-config-button">Reset to Defaults</button>
+        </div>
+        <div class="slider-row">
+            <label class="slider-label" for="confidence-slider">Confidence Threshold :</label>
+            <input type="range" id="confidence-slider" min="0" max="1" step="0.01" />
+            <span class="slider-value" id="confidence-value">0.25</span>
+        </div>
+        <div class="slider-row">
+            <label class="slider-label" for="iou-slider">IoU Threshold :</label>
+            <input type="range" id="iou-slider" min="0" max="1" step="0.01" />
+            <span class="slider-value" id="iou-value">0.45</span>
+        </div>
+        <div class="slider-row">
+            <label class="slider-label" for="size-slider">Image Size :</label>
+            <input type="range" id="size-slider" min="320" max="1280" step="32" />
+            <span class="slider-value" id="size-value">640</span>
+        </div>
+        <div class="slider-row">
+            <label class="slider-label" for="detections-slider">Max Detections :</label>
+            <input type="range" id="detections-slider" min="1" max="50" step="1" />
+            <span class="slider-value" id="detections-value">10</span>
+        </div>
+        <div class="slider-row">
+            <label class="slider-label" for="save-images-checkbox">Save Annotated Images :</label>
+            <input type="checkbox" id="save-images-checkbox" />
+            <span class="slider-value"></span>
+        </div>
+    </div>
+    
+    <div class="settings-section">
+        <h2>Model Information</h2>
+        <div id="model-info">
+            <div class="spinning-icon"></div>
+            <p>Loading model information...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    loadConfiguration();
+    loadModelInfo();
+    setupSettingsListeners();
+});
+
+async function loadConfiguration() {
+    try {
+        const response = await fetch('/get-config');
+        const config = await response.json();
+        
+        updateSlider('confidence', config.confidence_threshold);
+        updateSlider('iou', config.iou_threshold);
+        updateSlider('size', config.image_size);
+        updateSlider('detections', config.max_detections);
+        
+        document.getElementById('save-images-checkbox').checked = config.save_annotated_images;
+        
+    } catch (error) {
+        console.error('Config load error:', error);
+    }
+}
+
+async function loadModelInfo() {
+    const modelInfoDiv = document.getElementById('model-info');
+    
+    try {
+        const response = await fetch('/model-info');
+        const data = await response.json();
+        
+        if (data.success) {
+            modelInfoDiv.innerHTML = `
+                <div class="slider-row">
+                    <div class="slider-label"><strong>Status:</strong></div>
+                    <div class="slider-value"><span style="color: green;">●</span> Ready</div>
+                </div>
+                <div class="slider-row">
+                    <div class="slider-label"><strong>Classes:</strong></div>
+                    <div class="slider-value">${data.model_classes}</div>
+                </div>
+                <div class="slider-row">
+                    <div class="slider-label"><strong>Device:</strong></div>
+                    <div class="slider-value">${data.device}</div>
+                </div>
+                <div class="slider-row">
+                    <div class="slider-label"><strong>Model Path:</strong></div>
+                    <div class="slider-value" style="font-size: 12px; color: #666;">${data.model_path}</div>
+                </div>
+            `;
+        } else {
+            modelInfoDiv.innerHTML = `<div style="color: #dc3545;">Error: ${data.error}</div>`;
+        }
+    } catch (error) {
+        modelInfoDiv.innerHTML = `<div style="color: #dc3545;">Connection error</div>`;
+    }
+}
+
+function setupSettingsListeners() {
+    const sliders = [
+        { id: 'confidence', key: 'confidence_threshold', display: 'confidence-value' },
+        { id: 'iou', key: 'iou_threshold', display: 'iou-value' },
+        { id: 'size', key: 'image_size', display: 'size-value' },
+        { id: 'detections', key: 'max_detections', display: 'detections-value' }
+    ];
+
+    sliders.forEach(slider => {
+        const element = document.getElementById(`${slider.id}-slider`);
+        const display = document.getElementById(slider.display);
+        
+        element.addEventListener('input', () => {
+            const value = parseFloat(element.value);
+            display.textContent = slider.key.includes('threshold') ? value.toFixed(2) : value;
+        });
+        
+        element.addEventListener('change', async () => {
+            const value = parseFloat(element.value);
+            await updateConfig(slider.key, value);
+        });
+    });
+
+    document.getElementById('save-images-checkbox').addEventListener('change', async (e) => {
+        await updateConfig('save_annotated_images', e.target.checked);
+    });
+
+    document.getElementById('delete-config-button').addEventListener('click', async () => {
+        if (confirm('Are you sure you want to reset all settings to default values?')) {
+            try {
+                await fetch('/reset-config', { method: 'POST' });
+                setTimeout(() => {
+                    loadConfiguration();
+                    loadModelInfo();
+                }, 500);
+            } catch (error) {
+                console.error('Reset error:', error);
+            }
+        }
+    });
+}
+
+function updateSlider(type, value) {
+    const slider = document.getElementById(`${type}-slider`);
+    const display = document.getElementById(`${type}-value`);
+    
+    slider.value = value;
+    
+    if (type === 'confidence' || type === 'iou') {
+        display.textContent = value.toFixed(2);
+    } else {
+        display.textContent = value;
+    }
+}
+
+async function updateConfig(key, value) {
+    try {
+        await fetch('/update-config', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key, value })
+        });
+    } catch (error) {
+        console.error('Config update error:', error);
+        loadConfiguration();
+    }
+}
+</script>
+{% endblock %}

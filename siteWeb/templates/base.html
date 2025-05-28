@@ -7,7 +7,18 @@
     <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <!-- Contenu principal -->
+    <!-- Navigation Bar (no logo, just buttons) -->
+    <nav class="navbar">
+        <div class="nav-buttons">
+            <a href="/" class="nav-btn {% if request.path == '/' %}active{% endif %}" draggable="false">Home</a>
+            <a href="/recognize" class="nav-btn {% if request.path == '/recognize' %}active{% endif %}" draggable="false">Recognize</a>
+            <a href="/settings" class="nav-btn settings-btn {% if request.path == '/settings' %}active{% endif %}" draggable="false">
+                <img src="/static/images/gear-icon.png" alt="Settings" class="icon">
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
     <main>
         {% block content %}
         {% endblock %}

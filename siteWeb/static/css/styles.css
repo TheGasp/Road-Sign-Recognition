@@ -379,6 +379,7 @@ body {
 }
 
 .slider-row {
+    flex-wrap: nowrap;
     display: flex; /* Dispose les éléments sur une ligne */
     align-items: center; /* Aligne verticalement au centre */
     justify-content: flex-start; /* Aligne tous les éléments à gauche */
@@ -387,9 +388,10 @@ body {
 }
 
 .slider-label {
-    flex: 0 0 120px; /* Largeur fixe pour le label (ajustable) */
-    text-align: left; /* Aligne le texte à gauche */
-    margin-right: 10px; /* Espacement entre le texte et le slider */
+    min-width: 100px;       /* minimum raisonnable */
+    white-space: nowrap;    /* évite les sauts de ligne */
+    text-align: left;
+    margin-right: 10px;
 }
 
 input[type="range"] {
@@ -398,6 +400,7 @@ input[type="range"] {
 }
 
 .slider-value {
+    white-space: nowrap;
     flex: 0 0 50px; /* Largeur fixe pour les valeurs numériques */
     text-align: left; /* Aligne les chiffres à gauche */
 }

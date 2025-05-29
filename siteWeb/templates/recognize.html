@@ -91,18 +91,25 @@
         if (response.ok && result.success) {
             const processingTime = Date.now() - startTime;
             
-            // Enhanced result display with new API format
-            if (result.total_detections > 0) {
-                resultDisplay.innerHTML = `
-                    <div style="margin-bottom: 10px;">
-                        <strong>Detected sign: ${result.class} (${(result.confidence * 100).toFixed(1)}%)</strong>
-                    </div>
-                    <div style="font-size: 14px; color: #666;">
-                        Found ${result.total_detections} sign${result.total_detections !== 1 ? 's' : ''} • 
-                        Processing: ${(result.processing_time * 1000).toFixed(0)}ms • 
-                        Total: ${(processingTime / 1000).toFixed(1)}s
-                    </div>
-                `;
+        if (result.total_detections > 0) {
+            let detectionList = result.detections.map(det => 
+                `<li style="font-size: 14px; margin-bottom: 4px;">${det.class} (${(det.confidence * 100).toFixed(1)}%)</li>`
+            ).join("");
+
+            resultDisplay.innerHTML = `
+                <div style="margin-bottom: 6px; font-size: 16px; color: #333;">
+                    Detected signs:
+                </div>
+                <ul style="list-style: none; padding-left: 0; margin-top: 0; margin-bottom: 10px;">
+                    ${detectionList}
+                </ul>
+                <div style="font-size: 13px; color: #666;">
+                    Found ${result.total_detections} sign${result.total_detections !== 1 ? 's' : ''} • 
+                    Processing: ${(result.processing_time * 1000).toFixed(0)}ms • 
+                    Total: ${(processingTime / 1000).toFixed(1)}s
+                </div>
+            `;
+
             } else {
                 resultDisplay.innerHTML = `
                     <div>No traffic signs detected</div>

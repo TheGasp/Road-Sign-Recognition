@@ -20,6 +20,53 @@ from settings import read_config
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+CLASS_LABELS = {
+    0: "Speed limit 20",
+    1: "Speed limit 30",
+    2: "Speed limit 50",
+    3: "Speed limit 60",
+    4: "Speed limit 70",
+    5: "Speed limit 80",
+    6: "Restriction ends 80",
+    7: "Speed limit 100",
+    8: "Speed limit 120",
+    9: "No overtaking",
+    10: "No overtaking (trucks)",
+    11: "Priority at next intersection",
+    12: "Priority road",
+    13: "Give way",
+    14: "Stop",
+    15: "No traffic both ways",
+    16: "No trucks",
+    17: "No entry",
+    18: "Danger",
+    19: "Bend left",
+    20: "Bend right",
+    21: "Bend",
+    22: "Uneven road",
+    23: "Slippery road",
+    24: "Road narrows",
+    25: "Construction",
+    26: "Traffic signal",
+    27: "Pedestrian crossing",
+    28: "School crossing",
+    29: "Cycles crossing",
+    30: "Snow",
+    31: "Animals",
+    32: "Restriction ends",
+    33: "Go right",
+    34: "Go left",
+    35: "Go straight",
+    36: "Go right or straight",
+    37: "Go left or straight",
+    38: "Keep right",
+    39: "Keep left",
+    40: "Roundabout",
+    41: "Restriction ends (overtaking)",
+    42: "Restriction ends (overtaking trucks)"
+}
+
+
 class TrafficSignDetector:
     def __init__(self):
         """Initialize the detector with current configuration"""
@@ -120,7 +167,7 @@ class TrafficSignDetector:
                     
                     # Extract detection information
                     class_id = int(cls)
-                    class_name = self.model_names[class_id] if class_id < len(self.model_names) else f"Class_{class_id}"
+                    class_name = class_name = f"{CLASS_LABELS.get(class_id, f'Class_{class_id}')} ({class_id})"
                     confidence = float(conf)
                     bbox = [int(x.item()) for x in xyxy]
                     

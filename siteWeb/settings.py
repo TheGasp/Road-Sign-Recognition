@@ -4,10 +4,10 @@ import json
 CONFIG_FILE = "config.json"
 
 DEFAULT_CONFIG = {
-    "confidence_threshold": 0.25,
-    "iou_threshold": 0.45,
+    "confidence_threshold": 0.10,
+    "iou_threshold": 0.10,
     "image_size": 640,
-    "model_path": "../best.pt",
+    "model_path": "best.pt",
     "max_detections": 10,
     "save_annotated_images": True
 }
@@ -22,17 +22,17 @@ def initialize_config():
         try:
             with open(CONFIG_FILE, "r") as f:
                 config = json.load(f)
-            
+
             # Check for missing keys and add them
             missing_keys = [key for key in DEFAULT_CONFIG if key not in config]
             if missing_keys:
                 print(f"Adding missing parameters: {missing_keys}")
                 for key in missing_keys:
                     config[key] = DEFAULT_CONFIG[key]
-                
+
                 with open(CONFIG_FILE, "w") as f:
                     json.dump(config, f, indent=4)
-                    
+
         except (json.JSONDecodeError, ValueError):
             # Recreate file if corrupted
             with open(CONFIG_FILE, "w") as f:

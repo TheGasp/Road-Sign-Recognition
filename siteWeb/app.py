@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import cv2
+import sys
 
 # Import custom modules
 from detection import get_detector, reload_detector
@@ -275,4 +276,7 @@ if __name__ == '__main__':
     except Exception as e:
         logger.error(f"Failed to initialize detector: {e}")
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = 5000
+    if '--port=5001' in sys.argv:
+        port = 5001
+    app.run(debug=True, host='0.0.0.0', port=port)
